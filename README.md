@@ -4,9 +4,9 @@ A local-first data engineering portfolio project that simulates a modern data pl
 
 ## Current Stage
 
-Stage 0: project foundation.
+Stage 1: synthetic SaaS bronze pipeline.
 
-This stage establishes the repository structure, Python packaging, CI baseline, Git workflow, and documentation skeleton. It intentionally does not implement ingestion, dbt models, observability tables, or AI features yet.
+This stage adds a deterministic synthetic SaaS data pipeline that writes bronze Parquet files. dbt models, quality checks, observability tables, dashboard, and AI features remain planned for later stages.
 
 ## Target Architecture
 
@@ -36,7 +36,7 @@ This stage establishes the repository structure, Python packaging, CI baseline, 
 ```bash
 # Use any Python version >= 3.11.
 # On this macOS environment, Python 3.12 is available at /opt/homebrew/bin/python3.12.
-make setup PYTHON=/opt/homebrew/bin/python3.12
+make setup-pipeline PYTHON=/opt/homebrew/bin/python3.12
 source .venv/bin/activate
 ```
 
@@ -45,9 +45,10 @@ source .venv/bin/activate
 ```bash
 make lint
 make test
+make run-pipeline
 ```
 
-Later stages will add optional dependency groups for pipeline, transformation, quality, dashboard, and AI features. The foundation stage installs only development tooling by default.
+The Stage 1 setup installs development and pipeline dependencies. Later stages will add transformation, quality, dashboard, and AI dependency groups as those capabilities are implemented.
 
 ## Git Workflow
 
@@ -62,10 +63,17 @@ Each stage should be reviewed against its acceptance criteria before moving to t
 ## Roadmap
 
 1. Project foundation.
-2. Synthetic SaaS data pipeline.
+2. Synthetic SaaS data pipeline. Current stage.
 3. dbt transformation layer.
 4. Data quality engine.
 5. Incident simulation.
 6. Observability dashboard.
 7. AI incident analyst.
 8. CI/CD hardening and portfolio documentation.
+
+
+## Stage 1 Pipeline Output
+
+The bronze pipeline generates deterministic B2B SaaS source data for customers, subscriptions, invoices, payments, and product events. Outputs are written as partitioned Parquet files under `data/bronze/` and are ignored by Git.
+
+See `docs/stage-01-synthetic-data-pipeline.md` for implementation details and acceptance criteria.
