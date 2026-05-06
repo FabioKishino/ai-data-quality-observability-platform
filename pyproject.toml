@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-data-quality-observability-platform"
+version = "0.1.0"
+description = "Local-first data quality and observability platform for data engineering portfolio work."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Fabio Kishino" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9.0",
+    "ruff>=0.6,<1.0",
+]
+pipeline = [
+    "dagster>=1.10,<2.0",
+    "dagster-webserver>=1.10,<2.0",
+    "duckdb>=1.1,<2.0",
+    "pandas>=2.2,<3.0",
+    "pyarrow>=17.0,<22.0",
+]
+transform = [
+    "dbt-core>=1.8,<2.0",
+    "dbt-duckdb>=1.8,<2.0",
+]
+quality = [
+    "great-expectations>=1.0,<2.0",
+]
+dashboard = [
+    "streamlit>=1.38,<2.0",
+]
+ai = [
+    "chromadb>=0.5,<1.0",
+]
+all = [
+    "ai-data-quality-observability-platform[dev,pipeline,transform,quality,dashboard,ai]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
