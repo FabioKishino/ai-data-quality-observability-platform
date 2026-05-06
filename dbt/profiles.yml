@@ -1,0 +1,7 @@
+ai_data_quality_observability:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: data/warehouse/observability.duckdb
+      threads: 4

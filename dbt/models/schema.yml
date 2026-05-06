@@ -1,0 +1,133 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Cleaned customer records from the synthetic SaaS bronze source.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: account_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'trial', 'churned']
+
+  - name: stg_subscriptions
+    description: Cleaned subscription records from the bronze source.
+    columns:
+      - name: subscription_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: subscription_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'canceled']
+
+  - name: stg_invoices
+    description: Cleaned invoice records from the bronze source.
+    columns:
+      - name: invoice_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: subscription_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_subscriptions')
+                field: subscription_id
+      - name: invoice_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['paid', 'open', 'past_due']
+
+  - name: stg_payments
+    description: Cleaned payment records from the bronze source.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: invoice_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_invoices')
+                field: invoice_id
+      - name: payment_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['succeeded']
+
+  - name: stg_product_events
+    description: Cleaned product event records from the bronze source.
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+
+  - name: dim_customers
+    description: Customer dimension enriched with revenue and product usage summaries.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+
+  - name: dim_subscriptions
+    description: Subscription dimension with lifecycle attributes.
+    columns:
+      - name: subscription_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+  - name: fact_payments
+    description: Payment fact table joined to invoice context.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: invoice_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_invoices')
+                field: invoice_id
+
+  - name: fact_product_usage
+    description: Product usage fact table at event grain.
+    columns:
+      - name: event_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+  - name: mart_revenue_health
+    description: Segment and country revenue-health mart for observability dashboards.
+    columns:
+      - name: segment
+        tests: [not_null]
+      - name: country
+        tests: [not_null]

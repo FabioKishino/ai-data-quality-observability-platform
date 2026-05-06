@@ -1,0 +1,22 @@
+name: ai_data_quality_observability
+version: "1.0.0"
+config-version: 2
+
+profile: ai_data_quality_observability
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  ai_data_quality_observability:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
