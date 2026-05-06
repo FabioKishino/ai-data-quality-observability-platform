@@ -15,4 +15,11 @@ Use this checklist at the end of each stage before moving forward.
 
 ## Stage 1: Synthetic SaaS Data Pipeline
 
-To be detailed when Stage 1 starts.
+- [ ] Generator is deterministic for a fixed seed and run date.
+- [ ] Bronze Parquet files are created for all five source tables.
+- [ ] Table relationships are stable and tested.
+- [ ] Dagster definitions expose the bronze pipeline asset.
+- [ ] `make setup-pipeline` works with Python >= 3.11.
+- [ ] `make lint` passes.
+- [ ] `make test` passes.
+- [ ] `make run-pipeline` writes local output under `data/bronze/`.

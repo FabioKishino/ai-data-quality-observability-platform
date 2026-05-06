@@ -1,4 +1,4 @@
-.PHONY: setup lint test run-pipeline run-dashboard run-incident-demo
+.PHONY: setup setup-pipeline lint test run-pipeline run-dashboard run-incident-demo
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -8,14 +8,19 @@ setup:
 	. $(VENV)/bin/activate && python -m pip install --upgrade pip
 	. $(VENV)/bin/activate && pip install -e '.[dev]'
 
+setup-pipeline:
+	$(PYTHON) -m venv $(VENV)
+	. $(VENV)/bin/activate && python -m pip install --upgrade pip
+	. $(VENV)/bin/activate && pip install -e '.[dev,pipeline]'
+
 lint:
-	$(VENV)/bin/ruff check src tests
+	$(VENV)/bin/ruff check src tests dagster_project
 
 test:
 	$(VENV)/bin/pytest
 
 run-pipeline:
-	@echo "Pipeline implementation starts in Stage 1."
+	$(VENV)/bin/python -m observability_platform.pipeline --mode normal
 
 run-dashboard:
 	@echo "Dashboard implementation starts in Stage 5."
