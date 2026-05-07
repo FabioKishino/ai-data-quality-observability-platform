@@ -23,3 +23,16 @@ Use this checklist at the end of each stage before moving forward.
 - [ ] `make lint` passes.
 - [ ] `make test` passes.
 - [ ] `make run-pipeline` writes local output under `data/bronze/`.
+
+
+## Stage 2: dbt Transformation Layer
+
+- [ ] dbt project is configured for DuckDB.
+- [ ] Staging models read all five bronze source tables.
+- [ ] Intermediate models capture revenue and subscription lifecycle logic.
+- [ ] Mart models support customer, subscription, payment, product usage, and revenue-health analysis.
+- [ ] dbt tests validate uniqueness, non-null constraints, relationships, and accepted values.
+- [ ] `make setup-transform` works with Python >= 3.11.
+- [ ] `make run-pipeline` passes.
+- [ ] `make dbt-build` passes.
+- [ ] `make lint` and `make test` pass.
