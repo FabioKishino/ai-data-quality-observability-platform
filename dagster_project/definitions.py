@@ -25,9 +25,12 @@ def bronze_saas_source_tables(context) -> dict[str, int]:
 
 
 @asset(group_name="quality", compute_kind="python")
-def data_quality_check_results(context) -> dict[str, object]:
+def data_quality_check_results(
+    context, bronze_saas_source_tables: dict[str, int]
+) -> dict[str, object]:
     """Run SQL-backed quality checks and persist quality observability tables."""
 
+    _ = bronze_saas_source_tables
     result = run_quality_checks()
     summary = quality_run_as_dict(result)
     context.add_output_metadata(
