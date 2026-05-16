@@ -66,8 +66,8 @@ Each stage should be reviewed against its acceptance criteria before moving to t
 
 1. Project foundation.
 2. Synthetic SaaS data pipeline.
-3. dbt transformation layer.
-4. Data quality engine. Current stage.
+3. Data quality engine. Current stage.
+4. dbt transformation layer.
 5. Incident simulation.
 6. Observability dashboard.
 7. AI incident analyst.
