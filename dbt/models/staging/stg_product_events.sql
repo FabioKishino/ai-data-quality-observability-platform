@@ -1,6 +1,15 @@
 with source as (
     select *
-    from read_parquet('data/bronze/product_events/*/*.parquet', union_by_name = true)
+    from read_parquet(
+        'data/bronze/product_events/*/*.parquet',
+        hive_partitioning = true,
+        union_by_name = true
+    )
+),
+
+latest_partition as (
+    select max(cast(run_date as date)) as run_date
+    from source
 )
 
 select
@@ -11,3 +20,4 @@ select
     cast(event_count as integer) as event_count,
     cast(source as varchar) as source
 from source
+inner join latest_partition using (run_date)

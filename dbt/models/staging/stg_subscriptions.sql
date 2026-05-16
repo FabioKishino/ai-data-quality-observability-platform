@@ -1,6 +1,15 @@
 with source as (
     select *
-    from read_parquet('data/bronze/subscriptions/*/*.parquet', union_by_name = true)
+    from read_parquet(
+        'data/bronze/subscriptions/*/*.parquet',
+        hive_partitioning = true,
+        union_by_name = true
+    )
+),
+
+latest_partition as (
+    select max(cast(run_date as date)) as run_date
+    from source
 )
 
 select
@@ -13,3 +22,4 @@ select
     cast(mrr as decimal(12, 2)) as mrr,
     cast(subscription_status as varchar) as subscription_status
 from source
+inner join latest_partition using (run_date)

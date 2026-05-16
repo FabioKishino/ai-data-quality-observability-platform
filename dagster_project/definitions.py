@@ -5,6 +5,7 @@ from __future__ import annotations
 from dagster import Definitions, MetadataValue, asset
 
 from observability_platform.bronze_pipeline import run_bronze_pipeline
+from observability_platform.quality_engine import quality_run_as_dict, run_quality_checks
 
 
 @asset(group_name="bronze", compute_kind="python")
@@ -23,4 +24,22 @@ def bronze_saas_source_tables(context) -> dict[str, int]:
     return result.row_counts
 
 
-defs = Definitions(assets=[bronze_saas_source_tables])
+
+@asset(group_name="quality", compute_kind="python")
+def data_quality_check_results(context) -> dict[str, object]:
+    """Run SQL-backed quality checks and persist quality observability tables."""
+
+    result = run_quality_checks()
+    summary = quality_run_as_dict(result)
+    context.add_output_metadata(
+        {
+            "status": summary["status"],
+            "total_checks": summary["total_checks"],
+            "failed_checks": summary["failed_checks"],
+            "critical_failures": summary["critical_failures"],
+        }
+    )
+    return summary
+
+
+defs = Definitions(assets=[bronze_saas_source_tables, data_quality_check_results])
