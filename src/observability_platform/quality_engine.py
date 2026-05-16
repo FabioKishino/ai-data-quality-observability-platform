@@ -212,7 +212,8 @@ def run_quality_checks(
     """Run quality checks, persist observability tables, and return the run summary."""
 
     paths = paths or get_project_paths()
-    checks = checks or build_default_quality_checks()
+    if checks is None:
+        checks = build_default_quality_checks()
     started_at = datetime.now(UTC)
     run_id = str(uuid4())
 
