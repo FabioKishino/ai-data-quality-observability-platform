@@ -176,7 +176,7 @@ def build_default_quality_checks() -> list[QualityCheck]:
             dataset_name="fact_product_usage",
             severity=CheckSeverity.WARNING,
             description="Product usage event counts should be positive.",
-            metric_sql="select count(*) from fact_product_usage where event_count <= 0",
+            metric_sql="select count(*) from fact_product_usage where event_count is null or event_count <= 0",
             failure_condition="observed_value > 0",
         ),
         QualityCheck(
