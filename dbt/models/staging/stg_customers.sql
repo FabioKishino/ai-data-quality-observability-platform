@@ -1,6 +1,15 @@
 with source as (
     select *
-    from read_parquet('data/bronze/customers/*/*.parquet', union_by_name = true)
+    from read_parquet(
+        'data/bronze/customers/*/*.parquet',
+        hive_partitioning = true,
+        union_by_name = true
+    )
+),
+
+latest_partition as (
+    select max(cast(run_date as date)) as run_date
+    from source
 )
 
 select
@@ -12,3 +21,4 @@ select
     cast(acquisition_channel as varchar) as acquisition_channel,
     cast(account_status as varchar) as account_status
 from source
+inner join latest_partition using (run_date)
