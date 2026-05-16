@@ -24,7 +24,6 @@ def bronze_saas_source_tables(context) -> dict[str, int]:
     return result.row_counts
 
 
-
 @asset(group_name="quality", compute_kind="python")
 def data_quality_check_results(context) -> dict[str, object]:
     """Run SQL-backed quality checks and persist quality observability tables."""
