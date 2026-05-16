@@ -138,7 +138,8 @@ def build_default_quality_checks() -> list[QualityCheck]:
             metric_sql="""
                 select count(*)
                 from dim_subscriptions
-                where subscription_status not in ('active', 'canceled')
+                where subscription_status is null
+                   or subscription_status not in ('active', 'canceled')
             """,
             failure_condition="observed_value > 0",
         ),
